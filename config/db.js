@@ -19,5 +19,24 @@ pool.connect()
   .catch((error) => {
     console.error('Error connecting to PostgreSQL:', error.message);
   });
+// Assuming you have the letter grades stored in your database for each student
+
+exports.getAnalyticsData = async (req, res) => {
+  try {
+    const grades = await pool.query('SELECT letter_grade FROM grades');
+
+    grades.filter(grade => grade.letter_grade.toUpperCase() === 'C').length;
+    // Fetch data from your database or calculate analytics as needed
+    const passed =grades.filter(grade => grade.letter_grade.toUpperCase() === 'C').length;
+    const failed = grades.length - passed;
+
+    const courseData = await pool.query(/* SQL query to get course enrollment data */);
+
+    res.json({ passed, failed, courseData });
+  } catch (error) {
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+};
+// Note: This is a simplified example. In a real-world scenario, you might have a more complex grading system and criteria for passing.
 
 module.exports = pool;
