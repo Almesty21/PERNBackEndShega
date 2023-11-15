@@ -1,10 +1,4 @@
 const pool = require('../config/db');
-const {
-	deleteCourse,
-    deleteStudent,
-    deleteGradeById,
-    deleteCourseStudentAssociation
-	} = require('../delete.controller'); 
 // Delete a course by ID
 exports.deleteCourse = async (req, res) => {
     try {
@@ -62,58 +56,3 @@ exports.deleteGradeById = async (req, res) => {
     }
 };
 
-//Delete Course-Student Association by Course ID and Student ID
-
-exports.deleteCourseStudentAssociation = async (req, res) => {
-    try {
-        const { course_id, student_id } = req.params;
-
-        const deletedAssociation = await pool.query(
-            "DELETE FROM course_students WHERE course_id = $1 AND student_id = $2 RETURNING *",
-            [course_id, student_id]
-        );
-
-        if (deletedAssociation.rows.length === 0) {
-            return res.status(404).json({ message: "Association not found" });
-        }
-
-        res.json({ message: "Association deleted successfully" });
-    } catch (error) {
-        console.error(error);
-        res.status(500).json({ message: "Internal Server Error" });
-    }
-};
-
-describe('DELETE /deleteCourseStudentAssociation/:course_id/:student_id', () => {
-  it('should delete a course-student association by Course ID and Student ID', async () => {
-    // Replace '1' and '2' with the actual course_id and student_id to delete
-    const response = await request(app).delete('/deleteCourseStudentAssociation/1/2');
-
-    expect(response.statusCode).toBe(200);
-    expect(response.body).toHaveProperty('message', 'Association deleted successfully');
-  });
-
-  it('should return 404 if course-student association is not found', async () => {
-    // Use non-existing course_id and student_id
-    const response = await request(app).delete('/deleteCourseStudentAssociation/999/999');
-
-    expect(response.statusCode).toBe(404);
-    expect(response.body).toHaveProperty('message', 'Association not found');
-  });
-});describe('DELETE /deleteCourseStudentAssociation/:course_id/:student_id', () => {
-  it('should delete a course-student association by Course ID and Student ID', async () => {
-    // Replace '1' and '2' with the actual course_id and student_id to delete
-    const response = await request(app).delete('/deleteCourseStudentAssociation/1/2');
-
-    expect(response.statusCode).toBe(200);
-    expect(response.body).toHaveProperty('message', 'Association deleted successfully');
-  });
-
-  it('should return 404 if course-student association is not found', async () => {
-    // Use non-existing course_id and student_id
-    const response = await request(app).delete('/deleteCourseStudentAssociation/999/999');
-
-    expect(response.statusCode).toBe(404);
-    expect(response.body).toHaveProperty('message', 'Association not found');
-  });
-});
