@@ -50,6 +50,6 @@ router.put('/update-grade/:id', updateGrade);
 router.delete('/delete-course/:id', deleteCourse);
 router.delete('/delete-student/:id', deleteStudent);
 router.delete('/delete-grade/:id', deleteGradeById);
-router.delete('/delete-service', deleteCourseStudentAssociation);
+//router.delete('/delete-service', deleteCourseStudentAssociation);
 
 module.exports = router;
